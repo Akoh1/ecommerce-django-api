@@ -55,10 +55,8 @@ class CartSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         request = self.context['request']
-        print(f"request: {request.data}")
         items_data = request.data.get("items")
         validated_data["items"] = items_data
-        print(f"valid data: {validated_data}")
         #
         # order_pk = request.data.get('order')
         # order_pk = attempt_json_deserialize(order_pk, expect_type=str)
@@ -84,8 +82,6 @@ class CartSerializer(serializers.ModelSerializer):
         print(f"serilizer request: {request.data}")
         product_slug = request.data.get("product_slug")
         items_data = request.data.get("items")
-        print(f"update cart items: {instance.id}")
-        print(f"instance cart items: {instance.items}")
         user = validated_data.get("user")
         # product = get_object_or_404(Products, slug=product_slug)
         # print(f"product : {product}")

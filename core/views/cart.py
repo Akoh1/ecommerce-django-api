@@ -178,6 +178,7 @@ class CartView(APIView):
                     order_item.num_of_prod += 1
                     print(f"There is order in cart")
                     order_item.save()
+                    data["items"]: List[OrderItem] = [order_item]
                 # if order item exists then increase oder item count for cart
                 # save cart object
                 # else add order item to cart
