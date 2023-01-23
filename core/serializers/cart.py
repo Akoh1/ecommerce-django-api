@@ -83,6 +83,7 @@ class CartSerializer(serializers.ModelSerializer):
         product_slug = request.data.get("product_slug")
         items_data = request.data.get("items")
         user = validated_data.get("user")
+        print(f"serialized instace items: ", instance.items)
         # product = get_object_or_404(Products, slug=product_slug)
         # print(f"product : {product}")
         # order_item =

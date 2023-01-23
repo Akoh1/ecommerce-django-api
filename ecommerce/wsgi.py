@@ -11,6 +11,13 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecommerce.settings.dev')
+ENVIRONMENT = os.environ.get("ENV")
+if ENVIRONMENT == "dev":
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecommerce.settings.dev')
+elif ENVIRONMENT == "prod":
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecommerce.settings.prod')
+else:
+    print("-> Missing ENV variable (dev | prod)")
+    sys.exit(1)
 
 application = get_wsgi_application()
