@@ -135,7 +135,6 @@ class CartView(APIView):
         user = Authenticated(token).get_auth_user()
 
         data = request.data
-        print(f"getting original data: {data}")
 
         user_billing_address = BillingAddress.objects.filter(user=user.id)
 
@@ -152,48 +151,38 @@ class CartView(APIView):
         # get product instance from product slug and create and get or create order item
         with transaction.atomic():
             data["user"] = user.id
+
             product_slug = data.pop('product_slug', None)
             product = get_object_or_404(Products, slug=product_slug)
             order_item, item_created = OrderItem.objects.get_or_create(
                 user=user, product=product, ordered=False
             )
             data["items"]: List[OrderItem] = [order_item]
-            # for prod_slug in product_slug:
-            #     product = get_object_or_404(Products, slug=prod_slug)
-            #     order_item, item_created = OrderItem.objects.get_or_create(
-            #         user=user, product=product, ordered=False
-            #     )
-            # data["items"].append(order_item)
-            # check if user already has an open cart
+
             my_cart = Cart.objects.filter(user=user.id, ordered=False)
             output = {}
             data['ordered_date'] = datetime.now()
             # with transaction.atomic():
             if my_cart.exists():
-                print("cart exists")
                 cart = my_cart[0]
                 # get the first instance of cart
                 # check if order item for product already exists in cart
                 if cart.items.filter(product__slug=product_slug).exists():
                     order_item.num_of_prod += 1
-                    print(f"There is order in cart")
                     order_item.save()
                     data["items"]: List[OrderItem] = [order_item]
                 # if order item exists then increase oder item count for cart
                 # save cart object
                 # else add order item to cart
                 serializer = CartSerializer(cart, data=data, context={'request': request})
-                # print(f"exist serialiser: {serializer}")
+
                 if serializer.is_valid():
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
-                print(f"cart does not exist")
+
                 # create new cart with order items
                 output["cart"] = "User has no cart"
-                # data['ordered_date'] = datetime.now()
-
-                print(f"post data: {data}")
                 serializer = CartSerializer(data=data, context={'request': request})
 
                 if serializer.is_valid():
