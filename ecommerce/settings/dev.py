@@ -5,7 +5,7 @@ DEBUG = True
 
 SECRET_KEY = config('SECRET_KEY')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "localhost"]
 # CSRF_HEADER_NAME = "X_CSRFTOKEN"
 # CSRF_COOKIE_NAME = "XSRF-TOKEN"
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000']

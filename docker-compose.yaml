@@ -1,0 +1,47 @@
+version: '3.8'
+
+
+services:
+#
+#  db:
+#    image: postgres:12.0-alpine
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data/
+#    env_file:
+#      - psql.env
+##    environment:
+##      # - .env
+##      - POSTGRES_USER=${DB_USER}
+##      - POSTGRES_PASSWORD=${DB_PASSWORD}
+##      - POSTGRES_DB=${DB_NAME}
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command:  python manage.py runserver 0.0.0.0:8000
+#    volumes:
+#      - static_volume:/home/app/staticfiles
+      # - .:/code
+    ports:
+       - 8000:8000
+#    expose:
+#      - 8000
+#    depends_on:
+#      - db
+    env_file:
+    - env/.env
+
+#  nginx:
+#    build: ./nginx
+#    volumes:
+#      - static_volume:/home/app/staticfiles
+#    ports:
+#      - 1337:80
+#    depends_on:
+#      - web
+
+
+#volumes:
+#  postgres_data:
+#  static_volume:

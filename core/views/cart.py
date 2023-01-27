@@ -147,7 +147,6 @@ class CartView(APIView):
 
         # get active user billing address
         active_billing_address = get_object_or_404(BillingAddress, user=user.id, to_use=True)
-        print(f"Callimg post cart: {active_billing_address}")
         data['bill_address'] = active_billing_address.id
 
         # get product instance from product slug and create and get or create order item
@@ -168,16 +167,23 @@ class CartView(APIView):
             # check if user already has an open cart
             my_cart = Cart.objects.filter(user=user.id, ordered=False)
             output = {}
+            data['ordered_date'] = datetime.now()
             # with transaction.atomic():
             if my_cart.exists():
                 print("cart exists")
                 cart = my_cart[0]
                 # get the first instance of cart
                 # check if order item for product already exists in cart
+                if cart.items.filter(product__slug=product_slug).exists():
+                    order_item.num_of_prod += 1
+                    print(f"There is order in cart")
+                    order_item.save()
+                    data["items"]: List[OrderItem] = [order_item]
                 # if order item exists then increase oder item count for cart
                 # save cart object
                 # else add order item to cart
-                serializer = CartSerializer(cart, data=data)
+                serializer = CartSerializer(cart, data=data, context={'request': request})
+                # print(f"exist serialiser: {serializer}")
                 if serializer.is_valid():
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -185,7 +191,7 @@ class CartView(APIView):
                 print(f"cart does not exist")
                 # create new cart with order items
                 output["cart"] = "User has no cart"
-                data['ordered_date'] = datetime.now()
+                # data['ordered_date'] = datetime.now()
 
                 print(f"post data: {data}")
                 serializer = CartSerializer(data=data, context={'request': request})
