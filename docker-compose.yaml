@@ -30,7 +30,7 @@ services:
 #    depends_on:
 #      - db
     env_file:
-    - env/.env
+    - .env
 
 #  nginx:
 #    build: ./nginx
