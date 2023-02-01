@@ -28,10 +28,15 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 class ItemSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    product = ProductsSerializer(read_only=True)
+    ordered = serializers.BooleanField(read_only=True)
+    num_of_prod = serializers.IntegerField(read_only=True)
+    total_price = serializers.FloatField(read_only=True)
 
     class Meta:
         model = OrderItem
-        fields = ['id']
+        fields = ['id', 'user', 'product', 'ordered', 'num_of_prod', 'total_price']
 
 
 class CartSummarySerializer(serializers.ModelSerializer):
