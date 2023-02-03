@@ -1,9 +1,12 @@
 # pull official base image
 FROM python:3.9.2-alpine
 
+RUN addgroup -S app && adduser -S app -G app
 
 ENV APP_HOME=/app
 RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/staticfiles
+#RUN chmod -R 755 $APP_HOME/staticfiles
 
 # set work directory
 WORKDIR $APP_HOME
@@ -29,8 +32,11 @@ RUN pip3 install --default-timeout=100 -r requirements.txt
 
 # copy project
 COPY . .
+#
+RUN chown -R app:app $APP_HOME
+USER app
 
-ENV ENV=dev
+ENV ENV=prod
 # run entrypoint.prod.sh
 #ENTRYPOINT ["/home/app/entrypoint.sh"]
 #ENTRYPOINT ["ENV=dev"]

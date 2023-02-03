@@ -118,19 +118,14 @@ class OrderTests(APITestCase):
         n_cart_data = {
             "product_slug": self.products[0].slug,
         }
-        # print(f"res response: {response.data}")
         response = self.client.post(cart_url, n_cart_data, format='json')
-        print(f"sec response: {response.data}")
         s_cart_data = {
             "product_slug": self.products[0].slug,
         }
-        # print(f"res response: {response.data}")
         response = self.client.post(cart_url, s_cart_data, format='json')
-        print(f"tir response: {response.data}")
         total_amount = self.products[0].price * 3
         order_items = OrderItem.objects.get(id=response.data['items'][0].get('id'))
         cart = Cart.objects.get(id=response.data["id"])
-        print(f"test order items: {cart.items}")
         # self.assertTrue(response.data['id'])
         self.assertEqual(order_items.num_of_prod, 3)
         self.assertEqual(response.data['total_amount'], total_amount)

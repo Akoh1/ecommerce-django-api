@@ -18,6 +18,9 @@ from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+SASE_DIR = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -53,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'ecommerce.urls'
@@ -117,7 +121,7 @@ USE_TZ = True
 PAR_DIR1 = os.path.abspath(os.path.join(BASE_DIR, os.pardir))
 PAR_DIR2 = os.path.abspath(os.path.join(PAR_DIR1, os.pardir))
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 MEDIA_ROOT = os.path.join(PAR_DIR2, 'media_ecommerce')
 MEDIA_URL = '/media/'
 
@@ -135,3 +139,6 @@ FILTER_PAGE_SIZE = 10
 #     sys.exit(1)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# STATIC_URL = "/static/"
+# STATIC_ROOT = BASE_DIR / "staticfiles"

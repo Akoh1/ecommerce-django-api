@@ -6,7 +6,7 @@ media
 *.sqlite3
 db.sqlite3
 *.env
-.env
+env/.env
 .venv
 env/
 ENV/
@@ -71,5 +71,5 @@ GitHub.sublime-settings
 # Accept these files in the repository
 !.gitignore
 !.travis.yml
-/.env
+/env/.env
 /.vscode
