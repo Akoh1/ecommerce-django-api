@@ -5,18 +5,19 @@ from django_countries.fields import CountryField
 from django.apps import apps
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from typing import List
+
 
 # Create your models here.
 
 
 class UserManager(BaseUserManager):
-
     def _create_user(self, email, password, **extra_fields):
         """
         Create and save a user with the given username, email, and password.
         """
         if not email:
-            raise ValueError('The given email must be set')
+            raise ValueError("The given email must be set")
         # if not username:
         #     raise ValueError("The given username must be set")
         email = self.normalize_email(email)
@@ -37,25 +38,24 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser must have is_staff=True.")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser must have is_superuser=True.")
 
         return self._create_user(email, password, **extra_fields)
 
 
 class User(AbstractUser):
-
     name = models.CharField(max_length=255)
     email = models.CharField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
-    username = models.CharField(max_length=255, default='admin', null=False)
+    username = models.CharField(max_length=255, default="admin", null=False)
 
-    USERNAME_FIELD: str = 'email'
-    REQUIRED_FIELDS: list[str] = []
+    USERNAME_FIELD: str = "email"
+    REQUIRED_FIELDS: List[str] = []
 
     objects = UserManager()
 
@@ -78,7 +78,6 @@ class States(models.Model):
 
 
 class BillingAddress(models.Model):
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     street = models.CharField(max_length=200)
     state = models.ForeignKey(States, on_delete=models.SET_NULL, null=True)
@@ -101,4 +100,3 @@ class BillingAddress(models.Model):
     #     if not self.is_cleaned:
     #         self.full_clean()
     #     super().save(*args, **kwargs)
-

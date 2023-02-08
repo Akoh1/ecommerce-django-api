@@ -6,23 +6,38 @@ import uuid
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0002_alter_user_managers_user_username'),
+        ("core", "0002_alter_user_managers_user_username"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Products',
+            name="Products",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('prod_id', models.UUIDField(default=uuid.uuid4, editable=False)),
-                ('title', models.CharField(max_length=100)),
-                ('price', models.FloatField()),
-                ('stock', models.IntegerField()),
-                ('description', models.TextField()),
-                ('image', models.ImageField(storage=django.core.files.storage.FileSystemStorage(location='../ecommerce/media/photos'), upload_to='')),
-                ('slug', models.SlugField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("prod_id", models.UUIDField(default=uuid.uuid4, editable=False)),
+                ("title", models.CharField(max_length=100)),
+                ("price", models.FloatField()),
+                ("stock", models.IntegerField()),
+                ("description", models.TextField()),
+                (
+                    "image",
+                    models.ImageField(
+                        storage=django.core.files.storage.FileSystemStorage(
+                            location="../ecommerce/media/photos"
+                        ),
+                        upload_to="",
+                    ),
+                ),
+                ("slug", models.SlugField()),
             ],
         ),
     ]

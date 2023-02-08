@@ -1,9 +1,15 @@
-from rest_framework import generics, status
+from rest_framework import generics, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from core.models.cart import Products, OrderItem, Cart
 from core.models.auth import BillingAddress, User
-from core.serializers.cart import ProductsSerializer, StandardResultsSetPagination, OrderItemSerializer, CartSerializer
+from core.serializers.cart import (
+    ProductsSerializer,
+    StandardResultsSetPagination,
+    OrderItemSerializer,
+    CartSerializer,
+)
 from rest_framework.renderers import JSONRenderer
 from rest_framework.exceptions import AuthenticationFailed
 from ..helpers import Authenticated, PaginateSerializer
@@ -28,10 +34,30 @@ class OrderItemsList(generics.ListAPIView):
     pagination_class = StandardResultsSetPagination
 
 
+class ItemsViewSet(viewsets.ModelViewSet):
+    """
+    A viewset that provides the standard actions
+    """
+
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemSerializer
+
+    @action(detail=True, methods=["GET"])
+    def get_item(self, request, pk=None):
+        item = self.get_object()
+        serializer = self.get_serializer(item)
+        # if serializer.is_valid():
+        #     return Response(serializer.data, status=status.HTTP_200_OK)
+        # else:
+        #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class OrderItemsView(APIView):
     """
     Retrieve, update or delete a snippet instance.
     """
+
     renderer_classes = [JSONRenderer]
 
     def get_object(self, token):
@@ -43,15 +69,17 @@ class OrderItemsView(APIView):
             raise Http404
 
     def get(self, request):
-        token = request.COOKIES.get('jwt')
-        page = self.request.query_params.get('page ', 1)
+        token = request.COOKIES.get("jwt")
+        page = self.request.query_params.get("page ", 1)
         # page_size = self.request.query_params.get('page_size ', 10)
 
         items = self.get_object(token)
         objs = PaginateSerializer(items, page)
         paginate_objs = objs.paginate()
 
-        serializer = OrderItemSerializer(paginate_objs, many=True, context={'request': request})
+        serializer = OrderItemSerializer(
+            paginate_objs, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # def post(self, request, format=None):
@@ -65,6 +93,7 @@ class OrderItemsView(APIView):
     #         serializer.save()
     #         return Response(serializer.data)
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # class CommentDetailView(APIView):
 #     """
@@ -108,6 +137,7 @@ class CartView(APIView):
     """
     Retrieve, update or delete a snippet instance.
     """
+
     renderer_classes = [JSONRenderer]
 
     def get_object(self, token):
@@ -119,19 +149,21 @@ class CartView(APIView):
             raise Http404
 
     def get(self, request):
-        token = request.COOKIES.get('jwt')
-        page = self.request.query_params.get('page ', 1)
+        token = request.COOKIES.get("jwt")
+        page = self.request.query_params.get("page ", 1)
         # page_size = self.request.query_params.get('page_size ', 10)
 
         items = self.get_object(token)
         objs = PaginateSerializer(items, page)
         paginate_objs = objs.paginate()
 
-        serializer = CartSerializer(paginate_objs, many=True, context={'request': request})
+        serializer = CartSerializer(
+            paginate_objs, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
-        token = request.COOKIES.get('jwt')
+        token = request.COOKIES.get("jwt")
         user = Authenticated(token).get_auth_user()
 
         data = request.data
@@ -139,20 +171,20 @@ class CartView(APIView):
         user_billing_address = BillingAddress.objects.filter(user=user.id)
 
         if bool(user_billing_address) is False:
-            error = {
-                "error": "No billing address"
-            }
+            error = {"error": "No billing address"}
             return Response(error, status=status.HTTP_404_NOT_FOUND)
 
         # get active user billing address
-        active_billing_address = get_object_or_404(BillingAddress, user=user.id, to_use=True)
-        data['bill_address'] = active_billing_address.id
+        active_billing_address = get_object_or_404(
+            BillingAddress, user=user.id, to_use=True
+        )
+        data["bill_address"] = active_billing_address.id
 
         # get product instance from product slug and create and get or create order item
         with transaction.atomic():
             data["user"] = user.id
 
-            product_slug = data.pop('product_slug', None)
+            product_slug = data.pop("product_slug", None)
             product = get_object_or_404(Products, slug=product_slug)
             order_item, item_created = OrderItem.objects.get_or_create(
                 user=user, product=product, ordered=False
@@ -161,7 +193,7 @@ class CartView(APIView):
 
             my_cart = Cart.objects.filter(user=user.id, ordered=False)
             output = {}
-            data['ordered_date'] = datetime.now()
+            data["ordered_date"] = datetime.now()
             # with transaction.atomic():
             if my_cart.exists():
                 cart = my_cart[0]
@@ -174,16 +206,17 @@ class CartView(APIView):
                 # if order item exists then increase oder item count for cart
                 # save cart object
                 # else add order item to cart
-                serializer = CartSerializer(cart, data=data, context={'request': request})
+                serializer = CartSerializer(
+                    cart, data=data, context={"request": request}
+                )
 
                 if serializer.is_valid():
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
-
                 # create new cart with order items
                 output["cart"] = "User has no cart"
-                serializer = CartSerializer(data=data, context={'request': request})
+                serializer = CartSerializer(data=data, context={"request": request})
 
                 if serializer.is_valid():
                     serializer.save()

@@ -11,9 +11,9 @@ def main():
     # if str(sys.argv[-1] == '--dev'):
     ENVIRONMENT = os.environ.get("ENV")
     if ENVIRONMENT == "dev":
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecommerce.settings.dev')
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecommerce.settings.dev")
     elif ENVIRONMENT == "prod":
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecommerce.settings.prod')
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecommerce.settings.prod")
     else:
         print("-> Missing ENV variable (dev | prod)")
         sys.exit(1)
@@ -28,5 +28,5 @@ def main():
     execute_from_command_line(sys.argv)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

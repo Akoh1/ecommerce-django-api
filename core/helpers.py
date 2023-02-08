@@ -19,10 +19,10 @@ class Authenticated:
 
     def get_decoded_token(self):
         if not self.token:
-            raise AuthenticationFailed('Unauthenticated')
+            raise AuthenticationFailed("Unauthenticated")
 
         try:
-            payload = jwt.decode(self.token, 'secret', algorithms=['HS256'])
+            payload = jwt.decode(self.token, "secret", algorithms=["HS256"])
             return payload
 
         except jwt.ExpiredSignatureError:
@@ -31,7 +31,7 @@ class Authenticated:
     def get_auth_user(self):
         payload = self.get_decoded_token()
         try:
-            user = get_object_or_404(User, id=payload['id'])
+            user = get_object_or_404(User, id=payload["id"])
             return user
         except User.DoesNotExist:
             raise Http404
@@ -61,18 +61,10 @@ class RandomProductFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Products
 
-    title = factory.Faker(
-        "sentence",
-        nb_words=2,
-        variable_nb_words=True
-    )
+    title = factory.Faker("sentence", nb_words=2, variable_nb_words=True)
     price = 200
     stock = 10
-    description = factory.Faker(
-        "sentence",
-        nb_words=20,
-        variable_nb_words=True
-    )
+    description = factory.Faker("sentence", nb_words=20, variable_nb_words=True)
     # group = factory.SubFactory(GroupFactory)
 
 
@@ -82,8 +74,8 @@ class RandomUserFactory(factory.django.DjangoModelFactory):
 
     first_name = fake.first_name()
     last_name = fake.last_name()
-    username = factory.Sequence(lambda n: 'john%s' % n)
-    email = factory.LazyAttribute(lambda o: '%s@gmail.com' % o.username)
+    username = factory.Sequence(lambda n: "john%s" % n)
+    email = factory.LazyAttribute(lambda o: "%s@gmail.com" % o.username)
     # password = "password"
 
 
@@ -100,4 +92,3 @@ class StateFactory(factory.django.DjangoModelFactory):
 class BillingAddressFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = BillingAddress
-

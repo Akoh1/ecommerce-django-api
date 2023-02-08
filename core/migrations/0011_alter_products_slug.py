@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0010_alter_billingaddress_country_and_more'),
+        ("core", "0010_alter_billingaddress_country_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='products',
-            name='slug',
-            field=models.SlugField(default='-', unique=True),
+            model_name="products",
+            name="slug",
+            field=models.SlugField(default="-", unique=True),
         ),
     ]

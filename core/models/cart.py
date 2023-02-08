@@ -5,7 +5,7 @@ from django.core.files.storage import FileSystemStorage
 from core.models.auth import User, BillingAddress
 from typing import Union
 
-fs = FileSystemStorage(location='../ecommerce/media/photos')
+fs = FileSystemStorage(location="../ecommerce/media/photos")
 
 
 class Products(models.Model):
@@ -50,8 +50,9 @@ class Cart(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
-    bill_address = models.ForeignKey(BillingAddress, on_delete=models.SET_NULL,
-                                     blank=True, null=True)
+    bill_address = models.ForeignKey(
+        BillingAddress, on_delete=models.SET_NULL, blank=True, null=True
+    )
 
     def __str__(self):
         return self.user.email

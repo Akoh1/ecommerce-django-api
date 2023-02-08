@@ -30,7 +30,7 @@ RUN pip3 install --default-timeout=100 -r requirements.txt
 # copy project
 COPY . .
 
-ENV ENV=dev
+# ENV ENV=dev
 # run entrypoint.prod.sh
 #ENTRYPOINT ["/home/app/entrypoint.sh"]
 #ENTRYPOINT ["ENV=dev"]

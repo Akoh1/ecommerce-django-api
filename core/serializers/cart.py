@@ -8,14 +8,14 @@ from django.shortcuts import get_object_or_404
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):
     page_size = 50
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 100
 
 
 class ProductsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Products
-        fields = ['id', 'title', 'price', 'stock', 'description', 'image', 'slug']
+        fields = ["id", "title", "price", "stock", "description", "image", "slug"]
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
@@ -24,7 +24,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderItem
-        fields = ['id', 'user', 'product', 'ordered', 'num_of_prod', 'total_price']
+        fields = ["id", "user", "product", "ordered", "num_of_prod", "total_price"]
 
 
 class ItemSerializer(serializers.ModelSerializer):
@@ -36,7 +36,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderItem
-        fields = ['id', 'user', 'product', 'ordered', 'num_of_prod', 'total_price']
+        fields = ["id", "user", "product", "ordered", "num_of_prod", "total_price"]
 
 
 class CartSummarySerializer(serializers.ModelSerializer):
@@ -46,7 +46,16 @@ class CartSummarySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ['id', 'user', 'items', 'start_date', 'ordered_date', 'ordered', 'bill_address', 'total_amount']
+        fields = [
+            "id",
+            "user",
+            "items",
+            "start_date",
+            "ordered_date",
+            "ordered",
+            "bill_address",
+            "total_amount",
+        ]
 
 
 class CartSerializer(serializers.ModelSerializer):
@@ -56,10 +65,19 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ['id', 'user', 'items', 'start_date', 'ordered_date', 'ordered', 'bill_address', 'total_amount']
+        fields = [
+            "id",
+            "user",
+            "items",
+            "start_date",
+            "ordered_date",
+            "ordered",
+            "bill_address",
+            "total_amount",
+        ]
 
     def create(self, validated_data):
-        request = self.context['request']
+        request = self.context["request"]
         items_data = request.data.get("items")
         validated_data["items"] = items_data
         #
@@ -83,7 +101,7 @@ class CartSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        request = self.context['request']
+        request = self.context["request"]
         print(f"serilizer request: {request.data}")
         product_slug = request.data.get("product_slug")
         items_data = request.data.get("items")

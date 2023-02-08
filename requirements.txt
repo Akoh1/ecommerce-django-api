@@ -7,7 +7,8 @@ djangorestframework==3.14.0
 factory-boy==3.2.1
 Faker==15.3.4
 Pillow==9.3.0
-psycopg2==2.9.5
+#psycopg2==2.9.5
+psycopg2-binary=2.9.5
 PyJWT==2.6.0
 python-dateutil==2.8.2
 python-decouple==3.6

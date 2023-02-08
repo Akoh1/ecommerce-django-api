@@ -5,37 +5,61 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0008_billingaddress_orderitem_cart'),
+        ("core", "0008_billingaddress_orderitem_cart"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Countries',
+            name="Countries",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=256)),
-                ('abbr', models.CharField(max_length=10)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=256)),
+                ("abbr", models.CharField(max_length=10)),
             ],
         ),
         migrations.CreateModel(
-            name='States',
+            name="States",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=256)),
-                ('abbr', models.CharField(max_length=10)),
-                ('country', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.countries')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=256)),
+                ("abbr", models.CharField(max_length=10)),
+                (
+                    "country",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="core.countries"
+                    ),
+                ),
             ],
         ),
         migrations.AlterField(
-            model_name='billingaddress',
-            name='country',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, to='core.countries'),
+            model_name="billingaddress",
+            name="country",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.RESTRICT, to="core.countries"
+            ),
         ),
         migrations.AlterField(
-            model_name='billingaddress',
-            name='state',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, to='core.states'),
+            model_name="billingaddress",
+            name="state",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.RESTRICT, to="core.states"
+            ),
         ),
     ]
